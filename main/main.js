@@ -1,34 +1,37 @@
 'use strict';
-const fixture = ('../spec/fixture.js');
+
+const table =  ['||:::',':::||','::|:|','::||:',':|::|',':|:|:',':||::','|:::|','|::|:','|:|::'];
 
 function print(inputs) {
 
-    const barcodes = fixture.loadBarcodes();
 
-    const input = buildInputs(inputs, barcodes);
-    const postCodes = buildBarcode(input);
-    const codes = buildCode(postCodes, barcodes);
+    const input = buildInputs(inputs);
+    const codeText = buildCodeText(input);
+    const codes = buildCode(codeText);
+    const barcodes = buildBarcode(codes);
 
-    const codeText = buildCodeText(codes);
-    console.log(codeText);
+    console.log(barcodes);
 }
 
 function buildInputs(inputs) {
-
+  return inputs.slice(1,-1).match(/.{1,5}/g);
 }
 
-function buildCodeText(codes, barcodes) {
-
+function buildCodeText(codes) {
+    return codes.map(str => table.indexOf(str));
 }
 
-function buildCode(codes) {
-
+function buildCode(codeText) {
+    return codeText.join('').slice(0,-1);
 }
+
 
 function buildBarcode(codes) {
-
+    if (codes.length === 9) {
+        return `${codes.slice(0, 5)}-${codes.slice(5)}`;
+    }
+    return codes;
 }
-
 
 module.exports = {
     print: print,
