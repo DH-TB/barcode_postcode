@@ -1,18 +1,25 @@
 const main = require('../main/main.js');
 
 describe('print', ()=> {
-
-    const inputs = '|:|::|:|:|:||::::|:|::||:::::||::|:|::||::|::|||:::|';
-
     it('can work', ()=> {
-
-        const expectText = '45056-1234';
-
-        spyOn(console, 'log');
-
-        main.print(inputs);
-
-        expect(console.log).toHaveBeenCalledWith(expectText);
+        [
+            {
+                zipcode: '45056-1234',
+                barcode: '|:|::|:|:|:||::::|:|::||:::::||::|:|::||::|::|||:::|'
+            },
+            {
+                zipcode: '45056-1234',
+                barcode: '|:|::|:|:|:||::::|:|::||:::::||::|:|::||::|::|||:::|'
+            },
+            {
+                zipcode: '45056',
+                barcode: '|:|::|:|:|:||::::|:|::||::||:::|'
+            }
+        ].forEach(example=>{
+            const result = main.print(example.barcode);
+            expect(result.success).toBeTruthy();
+            expect(result.error).to(example.zipcode);
+        });
     });
 });
 

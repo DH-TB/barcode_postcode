@@ -3,14 +3,30 @@
 const table =  ['||:::',':::||','::|:|','::||:',':|::|',':|:|:',':||::','|:::|','|::|:','|:|::'];
 
 function print(inputs) {
-
+    if(!validateInputs(inputs)){
+        return{success:false,error:'invalid_barcode'}
+    }
 
     const input = buildInputs(inputs);
     const codeText = buildCodeText(input);
+    
+    if (!validateCheckDigit(codeText)) {
+        return {success: false, error: 'check_digit_not_match'};
+    }
+
     const codes = buildCode(codeText);
     const barcodes = buildBarcode(codes);
 
-    console.log(barcodes);
+    return {success: true, value: barcodes};
+}
+
+function validateInputs(inputs) {
+    const length = inputs.length;
+    return inputs.match(/^\|[:|]+\|$/) && [32, 52].includes(length);
+}
+
+function validateCheckDigit(codeText) {
+    return codeText.reduce((a, b) => a + b)% 10 === 0;
 }
 
 function buildInputs(inputs) {
@@ -24,7 +40,6 @@ function buildCodeText(codes) {
 function buildCode(codeText) {
     return codeText.join('').slice(0,-1);
 }
-
 
 function buildBarcode(codes) {
     if (codes.length === 9) {
